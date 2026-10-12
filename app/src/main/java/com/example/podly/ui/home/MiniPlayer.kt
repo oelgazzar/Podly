@@ -46,6 +46,7 @@ import com.example.podly.ui.theme.AppTheme
 fun MiniPlayer(
     title: String,
     player: Player?,
+    onExpanded: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val progressState = rememberProgressStateWithTickInterval(player, tickIntervalMs = 500)
@@ -62,6 +63,13 @@ fun MiniPlayer(
             Modifier
                 .heightIn(max = 100.dp)
                 .clip(MaterialTheme.shapes.medium)
+                .pointerInput(true) {
+                    detectTapGestures(
+                        onTap = {
+                            onExpanded()
+                        }
+                    )
+                }
         )
         Column(
             verticalArrangement = Arrangement.spacedBy(4.dp),
@@ -97,7 +105,7 @@ fun MiniPlayer(
                         )
                     }
             )
-            Row() {
+            Row {
                 PreviousButton(player)
                 PlayPauseButton(player)
                 NextButton(player)
@@ -115,6 +123,7 @@ private fun MiniPlayerPrev() {
         MiniPlayer(
             "Sports - Rock",
             null,
+            {},
             modifier = Modifier.fillMaxWidth().padding(16.dp))
     }
 }

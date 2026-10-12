@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -34,6 +35,7 @@ import com.example.podly.ui.theme.AppTheme
 fun HomeScreen() {
     var currentTrack by remember { mutableStateOf(null as Track?) }
     val player = rememberPlayer(currentTrack?.uri)
+    var playerExpanded by remember { mutableStateOf(false) }
 
     BackHandler(currentTrack != null) {
         currentTrack = null
@@ -47,8 +49,9 @@ fun HomeScreen() {
                 exit = fadeOut() + slideOutVertically { it }
             ) {
                 MiniPlayer(
-                    currentTrack?.title?:"",
+                    currentTrack?.title ?: "",
                     player,
+                    onExpanded = { playerExpanded = true },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(16.dp)
@@ -64,6 +67,18 @@ fun HomeScreen() {
                 .padding(innerPadding)
                 .padding(horizontal = 16.dp)
         )
+
+    }
+    if (playerExpanded) {
+        Surface {
+            ExpandedPlayer(
+                currentTrack?.title ?: "",
+                player,
+                onMinimized = { playerExpanded = false },
+                modifier = Modifier.fillMaxSize()
+                    .padding(16.dp)
+            )
+        }
     }
 }
 
