@@ -45,7 +45,10 @@ fun rememberPlayer(
 
     LaunchedEffect(player, mediaUri) {
         val controller = player?:return@LaunchedEffect
-        mediaUri?:return@LaunchedEffect
+        if (mediaUri == null) {
+            controller.pause()
+            return@LaunchedEffect
+        }
 
         controller.setMediaItem(MediaItem.fromUri(mediaUri))
         controller.prepare()

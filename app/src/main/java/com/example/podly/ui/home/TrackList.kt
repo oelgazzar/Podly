@@ -1,5 +1,6 @@
 package com.example.podly.ui.home
 
+import android.annotation.SuppressLint
 import android.net.Uri
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
@@ -9,10 +10,8 @@ import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
@@ -30,14 +29,16 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.podly.data.sample.sampleTracks
+import com.example.podly.models.Track
 import com.example.podly.ui.theme.AppTheme
 import com.example.test.podcasts
 
 @Composable
 fun TrackList(
+    tracks: List<Track> = sampleTracks,
     currentTrackUri: Uri?,
-    setTrackUri: (Uri) -> Unit,
-    modifier: Modifier = Modifier.Companion
+    setCurrentTrack: (Track) -> Unit,
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
     Card(modifier = modifier
         .wrapContentSize(align = Alignment.TopCenter)) {
@@ -46,13 +47,13 @@ fun TrackList(
                 .padding(8.dp)
                 .verticalScroll(rememberScrollState())
         ) {
-            sampleTracks.forEachIndexed { index, track ->
+            tracks.forEachIndexed { index, track ->
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(16.dp),
                     modifier = Modifier
                         .clickable(
-                            onClick = {setTrackUri(track.uri)}
+                            onClick = {setCurrentTrack(track)}
                         )
                 ) {
                     Text(
@@ -72,7 +73,7 @@ fun TrackList(
                             .alpha(alpha).padding(end = 32.dp))
                     }
                 }
-                if (index < sampleTracks.lastIndex) {
+                if (index < tracks.lastIndex) {
                     HorizontalDivider(color = MaterialTheme.colorScheme.outline.copy(alpha = .25f))
                 }
             }
@@ -85,6 +86,6 @@ fun TrackList(
 @Composable
 private fun TrackListPrev() {
     AppTheme {
-        TrackList(sampleTracks.first().uri, {})
+        TrackList(sampleTracks, sampleTracks.first().uri, {})
     }
 }
