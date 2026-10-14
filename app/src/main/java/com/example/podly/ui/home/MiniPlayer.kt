@@ -12,12 +12,16 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -30,6 +34,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.media3.common.Player
+import androidx.media3.common.listenTo
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.ui.compose.material3.buttons.NextButton
 import androidx.media3.ui.compose.material3.buttons.PlayPauseButton
@@ -38,6 +43,7 @@ import androidx.media3.ui.compose.material3.indicator.LinearProgressIndicator
 import androidx.media3.ui.compose.state.rememberProgressStateWithTickInterval
 import com.example.podly.R
 import com.example.podly.ui.theme.AppTheme
+import com.example.test.podcasts
 
 @OptIn(UnstableApi::class, ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class,
     ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class
@@ -51,16 +57,24 @@ fun MiniPlayer(
 ) {
     val progressState = rememberProgressStateWithTickInterval(player, tickIntervalMs = 500)
     var progressBarWidth by remember { mutableFloatStateOf(0f) }
+    var title by remember { mutableStateOf(null as String?) }
+
+    LaunchedEffect(player) {
+        player?.listenTo(Player.EVENT_MEDIA_METADATA_CHANGED) {
+            title = player.mediaMetadata.title.toString()
+        }
+    }
 
     Row(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
     ) {
-        Image(
-            painterResource(R.drawable.track_cover_placeholder),
+        Icon(
+            podcasts,
             null,
             Modifier
+                .size(64.dp)
                 .heightIn(max = 100.dp)
                 .clip(MaterialTheme.shapes.medium)
                 .pointerInput(true) {
@@ -75,7 +89,7 @@ fun MiniPlayer(
             verticalArrangement = Arrangement.spacedBy(4.dp),
         ) {
             Text(
-                title,
+                text = title?:"",
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 style = MaterialTheme.typography.bodyLarge

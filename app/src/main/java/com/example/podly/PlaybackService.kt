@@ -8,7 +8,6 @@ class PlaybackService: MediaSessionService() {
     private var mediaSession: MediaSession? = null
 
     override fun onCreate() {
-        println("service created")
         super.onCreate()
 
         val player = ExoPlayer.Builder(this).build()
@@ -18,7 +17,6 @@ class PlaybackService: MediaSessionService() {
     override fun onGetSession(controllerInfo: MediaSession.ControllerInfo): MediaSession? = mediaSession
 
     override fun onDestroy() {
-        println("service destroyed")
         mediaSession?.run {
             player.release()
             release()
