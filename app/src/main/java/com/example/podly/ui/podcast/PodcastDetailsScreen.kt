@@ -30,6 +30,7 @@ import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
 import com.example.podly.data.sample.sampleChannel
+import com.example.podly.models.Episode
 import com.example.podly.models.PodcastChannel
 import com.example.podly.ui.theme.AppTheme
 import com.example.test.arrow_back
@@ -37,6 +38,9 @@ import com.example.test.arrow_back
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PodcastDetailsScreen(
+    currentEpisode: Episode?,
+    isPlaying: Boolean,
+    playPause: (Episode) -> Unit,
     navigateBack: () -> Unit = {},
     viewModel: PodcastDetailsViewModel = hiltViewModel()
 ) {
@@ -59,6 +63,9 @@ fun PodcastDetailsScreen(
             when {
                 uiState is PodcastDetailsUiState.Success -> {
                     PodcastDetailsContent(
+                        currentEpisode = currentEpisode,
+                        isPlaying = isPlaying,
+                        playPause = playPause,
                         channel = (uiState as PodcastDetailsUiState.Success).channel,
                         modifier = Modifier.padding(innerPadding.calculateBottomPadding())
                     )
@@ -77,6 +84,9 @@ fun PodcastDetailsScreen(
 @Composable
 fun PodcastDetailsContent(
     channel: PodcastChannel,
+    currentEpisode: Episode?,
+    isPlaying: Boolean,
+    playPause: (Episode) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -98,6 +108,9 @@ fun PodcastDetailsContent(
             items(channel.episodes, key = { it.id }) {
                 EpisodeCard(
                     episode = it,
+                    isCurrent = currentEpisode?.id == it.id,
+                    isPlaying = isPlaying,
+                    playPause = { playPause(it) },
                     modifier = Modifier
                         .fillMaxWidth()
                 )
@@ -112,7 +125,12 @@ fun PodcastDetailsContent(
 private fun PodcastDetailsContentPrev() {
     AppTheme {
         PodcastDetailsContent(
-            sampleChannel)
+            sampleChannel,
+            sampleChannel.episodes.first(),
+            true,
+            {},
+            modifier = Modifier.padding(16.dp)
+        )
     }
 }
 

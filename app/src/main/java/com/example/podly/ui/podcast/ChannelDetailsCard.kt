@@ -110,7 +110,7 @@ fun ChannelDetailsCard(
                     modifier = Modifier
                         .weight(1f)
                 ) {
-                    Text("Subscribe")
+                    Text("Play Latest")
                 }
 
                 OutlinedButton(
@@ -123,7 +123,7 @@ fun ChannelDetailsCard(
                     ) {
                         Icon(play_arrow, null)
                         Spacer(modifier = Modifier.width(4.dp))
-                        Text("Play Latest")
+                        Text("Unsubscribe")
                     }
                 }
             }

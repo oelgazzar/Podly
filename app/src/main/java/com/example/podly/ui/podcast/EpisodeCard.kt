@@ -1,6 +1,5 @@
 package com.example.podly.ui.podcast
 
-import android.media.session.PlaybackState
 import androidx.annotation.OptIn
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -17,7 +16,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,14 +27,9 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.net.toUri
-import androidx.media3.common.MediaItem
-import androidx.media3.common.MediaMetadata
 import androidx.media3.common.Player
 import androidx.media3.common.listen
-import androidx.media3.common.listenTo
 import androidx.media3.common.util.UnstableApi
-import androidx.media3.ui.compose.state.rememberCurrentMediaItemState
 import com.example.podly.LocalPlayer
 import com.example.podly.data.sample.sampleChannel
 import com.example.podly.models.Episode
@@ -52,25 +45,11 @@ import java.time.format.DateTimeFormatter
 @Composable
 fun EpisodeCard(
     episode: Episode,
+    isCurrent: Boolean,
+    isPlaying: Boolean,
+    playPause: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val player = LocalPlayer.current
-    var isPlaying by remember { mutableStateOf(false) }
-
-    LaunchedEffect(player) {
-        player?.let {
-            player.listen { events ->
-                if (events.containsAny(
-                        Player.EVENT_IS_PLAYING_CHANGED,
-                        Player.EVENT_MEDIA_ITEM_TRANSITION
-                    )
-                ) {
-                    isPlaying = player.isPlaying && player.currentMediaItem?.mediaId == episode.id.toString()
-                }
-            }
-        }
-    }
-
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
@@ -108,34 +87,10 @@ fun EpisodeCard(
             )
         }
         IconButton(
-            onClick = {
-                val url = episode.audioUrl ?: return@IconButton
-                val player = player ?: return@IconButton
-                if (player.currentMediaItem?.mediaId == episode.id.toString()) {
-                    if (player.isPlaying) {
-                        player.pause()
-                    } else {
-                        player.play()
-                    }
-                } else {
-                    val mediaItem = MediaItem.Builder()
-                        .setMediaId(episode.id.toString())
-                        .setMediaMetadata(
-                            MediaMetadata.Builder()
-                                .setTitle(episode.title)
-                                .build()
-                        )
-                        .setUri(url.toUri())
-                        .build()
-
-                    player.setMediaItem(mediaItem)
-                    player.prepare()
-                    player.play()
-                }
-            }
+            onClick = playPause
         ) {
             Icon(
-                if (isPlaying) pause_circle else play_circle,
+                if (isPlaying && isCurrent) pause_circle else play_circle,
                 null,
                 tint = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier
@@ -161,6 +116,9 @@ private fun EpisodeCardPrev() {
     AppTheme {
         EpisodeCard(
             sampleChannel.episodes.first(),
+            isCurrent = true,
+            isPlaying = true,
+            playPause = {},
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp)

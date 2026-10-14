@@ -7,12 +7,16 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.podly.models.Episode
 import com.example.podly.ui.home.HomeScreen
 import com.example.podly.ui.podcast.AddPodcastScreen
 import com.example.podly.ui.podcast.PodcastDetailsScreen
 
 @Composable
 fun AppNavHost(
+    currentEpisode: Episode?,
+    isPlaying: Boolean,
+    playPause: (Episode) -> Unit,
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController()
 ) {
@@ -35,6 +39,9 @@ fun AppNavHost(
         }
         composable<NavDestination.PodcastDetails>{
             PodcastDetailsScreen(
+                currentEpisode = currentEpisode,
+                isPlaying = isPlaying,
+                playPause = playPause,
                 navigateBack = { navController.popBackStack<NavDestination.Home>(false) }
             )
         }

@@ -55,4 +55,6 @@ class PodcastRepository @Inject constructor(
     }
 
     fun getAllChannels() = channelDao.getAll().map { it.toDomain() }
+
+    fun getEpisode(episodeId: Long) = episodeDao.getEpisode(episodeId).map { it.toDomain() }
 }

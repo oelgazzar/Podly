@@ -1,20 +1,17 @@
 package com.example.podly.ui.home
 
 import android.content.ComponentName
-import android.net.Uri
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
-import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.session.MediaController
 import androidx.media3.session.SessionToken
-import com.example.podly.PlaybackService
+import com.example.podly.playback.PlaybackService
 import com.google.common.util.concurrent.MoreExecutors
 
 @Composable
