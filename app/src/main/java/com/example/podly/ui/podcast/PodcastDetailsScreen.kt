@@ -37,7 +37,6 @@ import com.example.test.arrow_back
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PodcastDetailsScreen(
-    player: Player?,
     navigateBack: () -> Unit = {},
     viewModel: PodcastDetailsViewModel = hiltViewModel()
 ) {
@@ -59,14 +58,7 @@ fun PodcastDetailsScreen(
         Column {
             when {
                 uiState is PodcastDetailsUiState.Success -> {
-                    Spacer(
-                        modifier = Modifier
-                            .background(CardDefaults.cardColors().containerColor)
-                            .fillMaxWidth()
-                            .height(innerPadding.calculateTopPadding())
-                    )
                     PodcastDetailsContent(
-                        player = player,
                         channel = (uiState as PodcastDetailsUiState.Success).channel,
                         modifier = Modifier.padding(innerPadding.calculateBottomPadding())
                     )
@@ -84,7 +76,6 @@ fun PodcastDetailsScreen(
 @androidx.annotation.OptIn(UnstableApi::class)
 @Composable
 fun PodcastDetailsContent(
-    player: Player?,
     channel: PodcastChannel,
     modifier: Modifier = Modifier
 ) {
@@ -106,9 +97,7 @@ fun PodcastDetailsContent(
         ) {
             items(channel.episodes, key = { it.id }) {
                 EpisodeCard(
-                    player = player,
                     episode = it,
-                    artworkUrl = channel.artworkUrl,
                     modifier = Modifier
                         .fillMaxWidth()
                 )
@@ -123,7 +112,6 @@ fun PodcastDetailsContent(
 private fun PodcastDetailsContentPrev() {
     AppTheme {
         PodcastDetailsContent(
-            player = null,
             sampleChannel)
     }
 }

@@ -13,7 +13,6 @@ import com.example.podly.ui.podcast.PodcastDetailsScreen
 
 @Composable
 fun AppNavHost(
-    player: Player?,
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController()
 ) {
@@ -36,8 +35,7 @@ fun AppNavHost(
         }
         composable<NavDestination.PodcastDetails>{
             PodcastDetailsScreen(
-                player = player,
-                navigateBack = { navController.popBackStack() }
+                navigateBack = { navController.popBackStack<NavDestination.Home>(false) }
             )
         }
     }

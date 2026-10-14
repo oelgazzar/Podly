@@ -19,7 +19,6 @@ import com.google.common.util.concurrent.MoreExecutors
 
 @Composable
 fun rememberPlayer(
-    mediaUri: Uri?
 ): Player? {
     val context = LocalContext.current
     var player by remember { mutableStateOf(null as MediaController?) }
@@ -41,18 +40,6 @@ fun rememberPlayer(
         onDispose {
             MediaController.releaseFuture(controllerFuture)
         }
-    }
-
-    LaunchedEffect(player, mediaUri) {
-        val controller = player?:return@LaunchedEffect
-        if (mediaUri == null) {
-            controller.pause()
-            return@LaunchedEffect
-        }
-
-        controller.setMediaItem(MediaItem.fromUri(mediaUri))
-        controller.prepare()
-        controller.play()
     }
 
     return player

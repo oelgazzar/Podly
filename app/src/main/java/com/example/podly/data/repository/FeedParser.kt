@@ -39,11 +39,14 @@ object FeedParser {
                         }
 
                         "enclosure" -> {
-                            episodeMap["url"] = xmlParser.getAttributeValue(0)
+                            episodeMap["url"] = xmlParser.getAttributeValue(null, "url")
                         }
-                        "category" -> {
-                            channelMap["category"] = xmlParser.getAttributeValue(0)
-                        }
+                        "category" -> runCatching {
+                            channelMap["category"] = xmlParser.getAttributeValue(null, "text")
+                        }.getOrNull()
+                        "image" -> runCatching {
+                            channelMap["artworkUrl"] = xmlParser.getAttributeValue(0)
+                        }.getOrNull()
                     }
                 }
 
@@ -70,7 +73,7 @@ object FeedParser {
                                     pubDate = parsePubDate(episodeMap["pubDate"]),
                                     duration = parseDuration(episodeMap["duration"]),
                                     guid = episodeMap["guid"] ?: episodeMap["url"],
-                                    audioUrl = episodeMap["url"]
+                                    audioUrl = episodeMap["url"]?.replace("http://", "https://")
                                 )
                             )
                         }

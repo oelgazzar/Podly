@@ -52,14 +52,10 @@ import java.time.format.DateTimeFormatter
 @Composable
 fun EpisodeCard(
     episode: Episode,
-    player: Player?,
-    artworkUrl: String? = null,
     modifier: Modifier = Modifier
 ) {
     val player = LocalPlayer.current
-    val coroutineScope = rememberCoroutineScope()
     var isPlaying by remember { mutableStateOf(false) }
-//    val currentMediaItem = rememberCurrentMediaItemState(player)
 
     LaunchedEffect(player) {
         player?.let {
@@ -147,21 +143,6 @@ fun EpisodeCard(
                     .size(36.dp)
             )
         }
-//        PlayPauseButton(
-//            player,
-//            onClick = {
-//                print("Clicked")
-//                player?.apply {
-//                    setMediaItem(MediaItem.fromUri(episode.audioUrl!!.toUri()))
-//                    prepare()
-//                    (::onClick)()
-//                }
-//
-//            },
-//            modifier = Modifier
-//                .border(2.dp, MaterialTheme.colorScheme.outline, CircleShape)
-//                .padding(2.dp)
-//        )
         IconButton(
             onClick = {}
         ) {
@@ -180,7 +161,6 @@ private fun EpisodeCardPrev() {
     AppTheme {
         EpisodeCard(
             sampleChannel.episodes.first(),
-            null,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp)

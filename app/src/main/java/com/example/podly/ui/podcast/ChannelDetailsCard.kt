@@ -24,6 +24,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.text.HtmlCompat
 import coil3.compose.AsyncImage
 import coil3.network.NetworkHeaders
 import coil3.network.httpHeaders
@@ -56,7 +57,7 @@ fun ChannelDetailsCard(
                         .data(channel.artworkUrl)
                         .httpHeaders(
                             NetworkHeaders.Builder()
-                                .add("User-Agent", ("Mozilla/5.0 (Windows NT 10.0; Win64; x64)"))
+                                .add("User-Agent", "Podly/1.0")
                                 .build()
                         )
                         .build(),
@@ -94,7 +95,10 @@ fun ChannelDetailsCard(
                 }
             }
             Text(
-                channel.description ?: "",
+                HtmlCompat.fromHtml(
+                    channel.description ?: "",
+                    HtmlCompat.FROM_HTML_MODE_COMPACT
+                ).toString(),
                 maxLines = 5,
                 overflow = TextOverflow.Ellipsis
             )

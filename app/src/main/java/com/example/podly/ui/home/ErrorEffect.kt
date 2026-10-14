@@ -22,7 +22,7 @@ fun ErrorEffect(
         errorState.error?.cause?.let { cause ->
             val message = cause.toUserMessage()
             snackbarHostState.showSnackbar(
-                message,
+                cause.toString(),
                 withDismissAction = true,
                 duration = SnackbarDuration.Indefinite
             )

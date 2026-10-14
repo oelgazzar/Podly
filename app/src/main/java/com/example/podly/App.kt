@@ -35,8 +35,7 @@ val LocalPlayer = compositionLocalOf<Player?> { null }
 
 @Composable
 fun App() {
-    var currentEpisode by remember { mutableStateOf(null as Episode?) }
-    val player = rememberPlayer(currentEpisode?.audioUrl?.toUri())
+    val player = rememberPlayer()
     val snackbarHostState = remember { SnackbarHostState() }
     val navController = rememberNavController()
 
@@ -50,7 +49,6 @@ fun App() {
                 exit = fadeOut() + slideOutVertically { it }
             ) {
                 MiniPlayer(
-                    currentEpisode?.title ?: "",
                     player,
                     onExpanded = {  },
                     modifier = Modifier
@@ -72,7 +70,6 @@ fun App() {
             LocalPlayer provides player
         ) {
             AppNavHost(
-                player = player,
                 navController = navController,
                 modifier = Modifier.padding(innerPadding)
             )

@@ -50,7 +50,6 @@ import com.example.test.podcasts
 )
 @Composable
 fun MiniPlayer(
-    title: String,
     player: Player?,
     onExpanded: () -> Unit,
     modifier: Modifier = Modifier
@@ -135,7 +134,6 @@ fun MiniPlayer(
 private fun MiniPlayerPrev() {
     AppTheme {
         MiniPlayer(
-            "Sports - Rock",
             null,
             {},
             modifier = Modifier.fillMaxWidth().padding(16.dp))

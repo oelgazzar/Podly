@@ -25,8 +25,8 @@ class PodcastRepository @Inject constructor(
 
     suspend fun fetchFeed(url: String): Long {
         val request = Request.Builder()
-            .url(url)
             .header("User-Agent", "Podly/1.0")
+            .url(url)
             .build()
 
         val newChannel = withContext(Dispatchers.IO) {
@@ -53,4 +53,6 @@ class PodcastRepository @Inject constructor(
     fun getChannelWithEpisodes(channelId: Long) = channelDao.getChannelWithEpisodes(channelId).map {
         it.toDomain()
     }
+
+    fun getAllChannels() = channelDao.getAll().map { it.toDomain() }
 }
